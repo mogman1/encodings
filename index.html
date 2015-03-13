@@ -1,1 +1,36 @@
-Hello, world!
+<html>
+  <head>
+    <script type="text/javascript" src="encoding.js"></script>
+
+  </head>
+  <body>
+    <div>
+      <canvas id="encoding" style="border: 1px solid black;"></canvas>
+    </div>
+    <div>
+      <input type="text" id="sequence" value="0110100" />
+      <button id="updateSequenceButton" onclick="updateSequence();">Update Sequence</button>
+
+      <br />
+      <br />
+      <select id="speed" onchange="updateSpeed();">
+        <option value="1">1 (Slow)</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select>
+    </div>
+    <script type="text/javascript">
+      clock = mogman1.encodings(document.getElementById('encoding'));
+      updateSequence();
+      function updateSequence() {
+        clock.setSequence(document.getElementById('sequence').value);
+      }
+
+      function updateSpeed() {
+        clock.setSpeed(document.getElementById('speed').value);
+      }
+    </script>
+  </body>
+</html>
