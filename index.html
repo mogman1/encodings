@@ -13,16 +13,12 @@
 
       <br />
       <br />
-      <select id="speed" onchange="updateSpeed();">
-        <option value="1">1 (Slow)</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
+      Speed:
+      <input type="range" min="0" max="10" step="1" id="speed" onchange="updateSpeed();" />
     </div>
     <script type="text/javascript">
       clock = mogman1.encodings(document.getElementById('encoding'));
+      updateSpeed();
       updateSequence();
       function updateSequence() {
         clock.setSequence(document.getElementById('sequence').value);
