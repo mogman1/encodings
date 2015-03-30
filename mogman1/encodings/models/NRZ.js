@@ -47,5 +47,9 @@
     }
   };
 
+  NRZ.prototype.getName = function() {
+    return "NRZ";
+  }
+
   mogman1.encodings.models.NRZ = NRZ;
 }(window.mogman1 = window.mogman1 || {}));

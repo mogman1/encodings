@@ -6,6 +6,7 @@
   }
 
   var NRZI = function(startPosition) {
+    if (startPosition != 'high' && startPosition != 'low') throw 'Invalid startPosition specified';
     mogman1.encodings.models.AbstractEncoding.call(this);
     this._startPosition = startPosition;
   };
@@ -53,6 +54,10 @@
       this._waveCoords.push([0, -1 * (this._bitHeight / 2)]);
     }
   };
+
+  NRZI.prototype.getName = function() {
+    return "NRZI (" + this._startPosition + ")";
+  }
 
   mogman1.encodings.models.NRZI = NRZI;
 }(window.mogman1 = window.mogman1 || {}));

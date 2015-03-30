@@ -21,10 +21,6 @@
   };
 
   EncodingView.prototype.addEncoding = function(encoding, startPosition) {
-    var waveHeight = this._wavePadding + this._bitHeight
-    var startY = (this._wavePadding + this._bitHeight / 2) + (waveHeight) * (this._encodings.length)
-    this._canvas.height += waveHeight;
-
     var obj = null;
     switch(encoding) {
       case 'NRZ':
@@ -37,14 +33,19 @@
         throw 'No such encoding [' + encoding + '] exists';
     }
 
+    var waveHeight = this._wavePadding + this._bitHeight
+    var startY = (this._wavePadding + this._bitHeight / 2) + (waveHeight) * (this._encodings.length)
+    this._canvas.height += waveHeight;
+
     obj.setStartY(startY);
     obj.setBitWidth(this._bitWidth);
     obj.setBitHeight(this._bitHeight);
     obj.buildSequence(this._currentSequence);
+    this._createLabel(obj, startY, this._encodings.length);
     this._encodings.push(obj);
 
     return this._encodings.length - 1;
-  }
+  };
 
   EncodingView.prototype.setSequence = function(sequence) {
     sequence = sequence.split('');
@@ -57,10 +58,20 @@
     for (var i = 0; i < this._encodings.length; i++) {
       this._encodings[i].buildSequence(sequence);
     }
-  }
+  };
 
   EncodingView.prototype.setSpeed = function(speed) {
     this._speed = speed;
+  };
+
+  EncodingView.prototype._createLabel = function(encoding, startY, encodingId) {
+    var lbl = document.createElement('div');
+    lbl.style.position = 'absolute';
+    lbl.style.top = startY - 10;
+    lbl.style.left = this._canvas.width + 20;
+    lbl.id = 'label_' + encodingId;
+    lbl.innerHTML = encoding.getName();
+    this._div.appendChild(lbl);
   }
 
   EncodingView.prototype._draw = function() {
@@ -80,7 +91,7 @@
 
     var obj = this;
     setTimeout(function() { obj._draw(); }, 30);
-  }
+  };
 
   mogman1.encodings = mogman1.encodings || {};
   mogman1.encodings.models = mogman1.encodings.models || {};

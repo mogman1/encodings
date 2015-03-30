@@ -6,7 +6,7 @@
     <script type="text/javascript" src="mogman1/encodings/models/NRZI.js"></script>
   </head>
   <body>
-    <div id="encodingDiv"></div>
+    <div id="encodingDiv" style="width: 500px;"></div>
     <div>
       <input type="text" id="sequence" value="0110100" />
       <button id="updateSequenceButton" onclick="updateSequence();">Update Sequence</button>
@@ -31,6 +31,7 @@
       Speed:
       <input type="range" min="0" max="10" step="1" id="speed" onchange="updateSpeed();" />
     </div>
+    <div id="errors" style="color: red;"></div>
     <script type="text/javascript">
       clock = new mogman1.encodings.models.EncodingView(document.getElementById('encodingDiv'), 300);
       updateSpeed();
@@ -39,12 +40,17 @@
       function addEncoding() {
         var type = document.getElementById('encodingType').value;
         var startPosition = document.getElementById('startPosition').value;
-        console.log(type);
         if (type) {
-          clock.addEncoding(type, startPosition);
-          document.getElementById('encodingType').value = '';
-          document.getElementById('startPosition').value = '';
-          document.getElementById('startPosition').style.display = 'none';
+          try {
+            clock.addEncoding(type, startPosition);
+            document.getElementById('encodingType').value = '';
+            document.getElementById('startPosition').value = '';
+            document.getElementById('startPosition').style.display = 'none';
+          } catch (e) {
+            console.log(e);
+            document.getElementById('errors').innerHTML = e;
+            setTimeout(function() { document.getElementById('errors').innerHTML = ''; }, 5000)
+          }
         }
       }
 

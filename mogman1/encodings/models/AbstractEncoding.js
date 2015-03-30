@@ -61,6 +61,10 @@
     }
   };
 
+  AbstractEncoding.prototype.getName = function() {
+    throw "getName has not been overridden by child object";
+  }
+
   AbstractEncoding.prototype.isFinished = function() {
     return this._isFinished;
   }
