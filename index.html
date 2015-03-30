@@ -1,15 +1,30 @@
 <html>
   <head>
-    <script type="text/javascript" src="encoding.js"></script>
-
+    <script type="text/javascript" src="mogman1/encodings/models/EncodingView.js"></script>
+    <script type="text/javascript" src="mogman1/encodings/models/AbstractEncoding.js"></script>
+    <script type="text/javascript" src="mogman1/encodings/models/NRZ.js"></script>
+    <script type="text/javascript" src="mogman1/encodings/models/NRZI.js"></script>
   </head>
   <body>
-    <div>
-      <canvas id="encoding" style="border: 1px solid black;"></canvas>
-    </div>
+    <div id="encodingDiv"></div>
     <div>
       <input type="text" id="sequence" value="0110100" />
       <button id="updateSequenceButton" onclick="updateSequence();">Update Sequence</button>
+
+      <br />
+      <br />
+      <select id="encodingType" onchange="showSequenceOptions();">
+        <option value=""></option>
+        <option value="NRZ">NRZ</option>
+        <option value="NRZI">NRZI</option>
+        <option value="Manchester">Manchester</option>
+      </select>
+      <select id="startPosition" style="display: none;">
+        <option value="">Start Position</option>
+        <option value="high">High</option>
+        <option value="low">Low</option>
+      </select>
+      <button id="addEncoding" onclick="addEncoding();">Add Encoding</button>
 
       <br />
       <br />
@@ -17,15 +32,36 @@
       <input type="range" min="0" max="10" step="1" id="speed" onchange="updateSpeed();" />
     </div>
     <script type="text/javascript">
-      clock = mogman1.encodings(document.getElementById('encoding'));
+      clock = new mogman1.encodings.models.EncodingView(document.getElementById('encodingDiv'), 300);
       updateSpeed();
       updateSequence();
+
+      function addEncoding() {
+        var type = document.getElementById('encodingType').value;
+        var startPosition = document.getElementById('startPosition').value;
+        console.log(type);
+        if (type) {
+          clock.addEncoding(type, startPosition);
+          document.getElementById('encodingType').value = '';
+          document.getElementById('startPosition').value = '';
+          document.getElementById('startPosition').style.display = 'none';
+        }
+      }
+
       function updateSequence() {
         clock.setSequence(document.getElementById('sequence').value);
       }
 
       function updateSpeed() {
         clock.setSpeed(document.getElementById('speed').value);
+      }
+
+      function showSequenceOptions() {
+        if (document.getElementById('encodingType').value != 'NRZ') {
+          document.getElementById('startPosition').style.display = '';
+        } else {
+          document.getElementById('startPosition').style.display = 'none';
+        }
       }
     </script>
   </body>
