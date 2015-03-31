@@ -30,7 +30,6 @@
       pos = 'low';
     }
 
-    var prev = null;
     for (var i = 0; i < bitSequence.length; i++) {
       var cur = bitSequence[i];
       if (cur == '0') {

@@ -29,6 +29,9 @@
       case 'NRZI':
         obj = new mogman1.encodings.models.NRZI(startPosition);
         break;
+      case 'Manchester':
+        obj = new mogman1.encodings.models.Manchester();
+        break;
       default:
         throw 'No such encoding [' + encoding + '] exists';
     }
