@@ -7,6 +7,7 @@
 
   var Manchester = function() {
     mogman1.encodings.models.AbstractEncoding.call(this);
+    this._widthDivisor = 1;
   };
 
   Manchester.prototype = Object.create(mogman1.encodings.models.AbstractEncoding.prototype); // See note below
@@ -41,7 +42,7 @@
         pos = 'low';
       }
 
-      this._waveCoords.push([this._bitWidth / 2, 0]);
+      this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
       if (cur == '1') {
         this._waveCoords.push([0, 1 * this._bitHeight]);
         pos = 'low';
@@ -50,7 +51,7 @@
         pos = 'high';
       }
 
-      this._waveCoords.push([this._bitWidth / 2, 0]);
+      this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
     }
   };
 
