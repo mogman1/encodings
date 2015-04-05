@@ -10,6 +10,8 @@
      * Indicates if the waveform has had the opportunity to fully pass across the canvas window
      */
     this._isFinished = false;
+
+    this._bitBorders = [];
   };
 
   /**
@@ -27,6 +29,32 @@
    * @param  {int} startX - Integer representing starting x position
    */
   AbstractEncoding.prototype.draw = function(canvas, startX) {
+    this._drawWave(canvas, startX);
+    this._drawBitBorders(canvas, startX);
+  };
+
+  AbstractEncoding.prototype._drawBitBorders = function(canvas, startX) {
+    var bleedOver = 3;
+    var startY = this._startY - this._bitHeight / 2 - bleedOver;
+    var endY   = this._startY + this._bitHeight / 2 + bleedOver;
+    var c = canvas.getContext('2d');
+    c.beginPath();
+
+    var dashLength = 3;
+    for (var i = 0; var < this._bitBorders.length; i++) {
+      var x = this._bitBorders[i];
+      var y = startY;
+      c.moveTo(x, y);
+      if (x >= 0 && x <= canvas.width) {
+        var switch = 0;
+        while (y < endY) {
+          c
+        }
+      }
+    }
+  }
+
+  AbstractEncoding.prototype._drawWave = function(canvas, startX) {
     var c = canvas.getContext('2d');
     c.beginPath();
 
@@ -59,7 +87,7 @@
       c.lineTo(x, y);
       c.stroke();
     }
-  };
+  }
 
   AbstractEncoding.prototype.getName = function() {
     throw "getName has not been overridden by child object";
