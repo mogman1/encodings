@@ -19,6 +19,7 @@
    */
   NRZ.prototype.buildSequence = function(bitSequence) {
     this._waveCoords = [];
+    this._bitBorders = [0];
     var prev = null;
     for (var i = 0; i < bitSequence.length; i++) {
       var cur = bitSequence[i];
@@ -37,6 +38,7 @@
       }
 
       this._waveCoords.push([this._bitWidth, 0]);
+      this._bitBorders.push(this._bitWidth);
       prev = cur;
     }
 

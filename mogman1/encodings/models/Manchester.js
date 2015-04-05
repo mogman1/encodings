@@ -20,6 +20,7 @@
    */
   Manchester.prototype.buildSequence = function(bitSequence) {
     this._waveCoords = [];
+    this._bitBorders = [0];
     var pos = null;
     //move signal to proper state to record first bit
     if (bitSequence.length) {
@@ -34,6 +35,7 @@
 
     for (var i = 0; i < bitSequence.length; i++) {
       var cur = bitSequence[i];
+      var xDistance = 0
       if (cur == '1' && pos == 'low') {
         this._waveCoords.push([0, -1 * this._bitHeight]);
         pos = 'high';
@@ -43,6 +45,7 @@
       }
 
       this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
+      xDistance += this._bitWidth / this._widthDivisor;
       if (cur == '1') {
         this._waveCoords.push([0, 1 * this._bitHeight]);
         pos = 'low';
@@ -52,6 +55,8 @@
       }
 
       this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
+      xDistance += this._bitWidth / this._widthDivisor;
+      this._bitBorders.push(xDistance);
     }
   };
 

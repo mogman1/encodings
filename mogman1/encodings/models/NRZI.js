@@ -21,6 +21,7 @@
    */
   NRZI.prototype.buildSequence = function(bitSequence) {
     this._waveCoords = [];
+    this._bitBorders = [0];
     var pos = null;
     if (this._startPosition == 'high') {
       this._waveCoords.push([0, -1 * this._bitHeight / 2]);
@@ -32,6 +33,7 @@
 
     for (var i = 0; i < bitSequence.length; i++) {
       var cur = bitSequence[i];
+      this._bitBorders.push(this._bitWidth);
       if (cur == '0') {
         this._waveCoords.push([this._bitWidth, 0]);
       } else {

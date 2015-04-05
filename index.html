@@ -37,6 +37,9 @@
       clock = new mogman1.encodings.models.EncodingView(document.getElementById('encodingDiv'), 300);
       updateSpeed();
       updateSequence();
+      clock.addEncoding('Manchester', '');
+      clock.addEncoding('NRZ', '');
+      clock.addEncoding('NRZI', 'high');
 
       function addEncoding() {
         var type = document.getElementById('encodingType').value;

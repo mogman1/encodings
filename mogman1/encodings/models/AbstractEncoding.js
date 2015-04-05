@@ -34,33 +34,47 @@
   };
 
   AbstractEncoding.prototype._drawBitBorders = function(canvas, startX) {
-    var bleedOver = 3;
+    var dashSwitch = 1;
+    var bleedOver = 7;
+    var dashSize = 3;
     var startY = this._startY - this._bitHeight / 2 - bleedOver;
     var endY   = this._startY + this._bitHeight / 2 + bleedOver;
+    var x = startX;
+    var y = startY;
+
     var c = canvas.getContext('2d');
     c.beginPath();
-
-    var dashLength = 3;
-    for (var i = 0; var < this._bitBorders.length; i++) {
-      var x = this._bitBorders[i];
-      var y = startY;
-      c.moveTo(x, y);
+    x += canvas.width + 2 * this._bitWidth;
+    c.moveTo(x, y);
+    for (var i = 0; i < this._bitBorders.length; i++) {
+      x = x + this._bitBorders[i];
       if (x >= 0 && x <= canvas.width) {
-        var switch = 0;
+        y = startY;
+        c.moveTo(x, y);
         while (y < endY) {
-          c
+          y += dashSize;
+          if (y > endY) y = endY;
+          if (dashSwitch) {
+            c.lineTo(x, y);
+            dashSwitch = 0;
+          } else {
+            c.moveTo(x, y);
+            dashSwitch = 1;
+          }
         }
       }
     }
+
+    c.strokeStyle = 'red';
+    c.stroke();
   }
 
   AbstractEncoding.prototype._drawWave = function(canvas, startX) {
-    var c = canvas.getContext('2d');
-    c.beginPath();
-
     //move cursor to start of waveform
+    var c = canvas.getContext('2d');
     var x = startX;
     var y = this._startY;
+    c.beginPath();
     c.moveTo(x, y);
 
     //draw line of neutral power level across canvas view, plus a little padding
@@ -78,15 +92,16 @@
     //move line to neutral power level
     y = this._startY
     c.lineTo(x, y);
-    c.stroke();
     this._isFinished = (x < 0);
 
     //draw neutral power level line beyond canvas edge if we still have distance to go
     if (x <= canvas.width) {
       x = 1.5 * canvas.width;
       c.lineTo(x, y);
-      c.stroke();
     }
+
+    c.strokeStyle = 'black';
+    c.stroke();
   }
 
   AbstractEncoding.prototype.getName = function() {
