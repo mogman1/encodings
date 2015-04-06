@@ -1,9 +1,9 @@
 (function(mogman1, undefined) {
   var EncodingView = function(canvasDiv, canvasWidth) {
-    var wavePadding = 20;
+    this._wavePadding = 40;
     var canvas = document.createElement('canvas');
     canvas.width = canvasWidth;
-    canvas.height = wavePadding;
+    canvas.height = this._wavePadding;
 
     this._div = canvasDiv;
     this._div.style.position = 'relative';
@@ -14,14 +14,14 @@
     this._bitWidth = 40;
     this._bitHeight = 40;
     this._encodings = [];
-    this._wavePadding = 20;
     this._currentSequence = [];
     
     this._draw();
   };
 
-  EncodingView.prototype.addEncoding = function(encoding, startPosition) {
+  EncodingView.prototype.addEncoding = function(encoding, startPosition, bitWidth) {
     var obj = null;
+    var bw = this._bitWidth;
     switch(encoding) {
       case 'NRZ':
         obj = new mogman1.encodings.models.NRZ();
@@ -31,23 +31,42 @@
         break;
       case 'Manchester':
         obj = new mogman1.encodings.models.Manchester();
+        bw = (bitWidth) ? bitWidth : this._bitWidth;
         break;
       default:
         throw 'No such encoding [' + encoding + '] exists';
-    }
+    };
 
-    var waveHeight = this._wavePadding + this._bitHeight
-    var startY = (this._wavePadding + this._bitHeight / 2) + (waveHeight) * (this._encodings.length)
+    var waveHeight = this._wavePadding + this._bitHeight;
+    var startY = this._wavePadding + (this._bitHeight / 2) + (waveHeight) * (this._encodings.length);
     this._canvas.height += waveHeight;
 
     obj.setStartY(startY);
-    obj.setBitWidth(this._bitWidth);
+    obj.setBitWidth(bw);
     obj.setBitHeight(this._bitHeight);
     obj.buildSequence(this._currentSequence);
     this._createLabel(obj, startY, this._encodings.length);
     this._encodings.push(obj);
 
     return this._encodings.length - 1;
+  };
+
+  EncodingView.prototype.removeEncoding = function(encodingId) {
+    //easier to just kill all existing labels and recreate them
+    for (var i = 0; i < this._encodings.length; i++) {
+      var lblToKill = document.getElementById('label_' + i);
+      lblToKill.parentNode.removeChild(lblToKill);
+    }
+
+    var waveHeight = this._wavePadding + this._bitHeight;
+    this._canvas.height = this._wavePadding;
+    this._encodings.splice(encodingId, 1);
+    for (var i = 0; i < this._encodings.length; i++) {
+      this._canvas.height += waveHeight;
+      var startY = this._wavePadding + (this._bitHeight / 2) + (waveHeight) * i;
+      this._encodings[i].setStartY(startY);
+      this._createLabel(this._encodings[i], startY, i);
+    }
   };
 
   EncodingView.prototype.setSequence = function(sequence) {
@@ -67,15 +86,24 @@
     this._speed = speed;
   };
 
+  EncodingView.prototype.setStartPositionInput = function(input) {
+    this._startPositionInput = input;
+  };
+
   EncodingView.prototype._createLabel = function(encoding, startY, encodingId) {
+    var lblHtml = '<ul class="fa-ul"><li>';
+    lblHtml += '<i class="fa-li fa fa-close" onclick="removeEncoding(\'' + encodingId + '\');"></i>';
+    lblHtml += encoding.getName() + '</li></ul>';
+
     var lbl = document.createElement('div');
     lbl.style.position = 'absolute';
-    lbl.style.top = startY - 10;
-    lbl.style.left = this._canvas.width + 20;
+    lbl.style.minWidth = '120px';
+    lbl.style.top = startY - 25;
+    lbl.style.left = this._canvas.width + 10;
     lbl.id = 'label_' + encodingId;
-    lbl.innerHTML = encoding.getName();
+    lbl.innerHTML = lblHtml;
     this._div.appendChild(lbl);
-  }
+  };
 
   EncodingView.prototype._draw = function() {
     var c = this._canvas.getContext('2d');

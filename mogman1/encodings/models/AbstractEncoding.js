@@ -12,6 +12,8 @@
     this._isFinished = false;
 
     this._bitBorders = [];
+
+    this._bitSequence = [];
   };
 
   /**
@@ -19,8 +21,13 @@
    * in bitSequence.
    * @param {string[]} bitSequence - Array of 1's and 0's that represent a waveform
    */
-  AbstractEncoding.prototype.buildSequence = function(bitSequence) {
+  AbstractEncoding.prototype._buildSequence = function(bitSequence) {
     throw "buildSequence has not been overridden by child object";
+  };
+
+  AbstractEncoding.prototype.buildSequence = function(bitSequence) {
+    this._bitSequence = bitSequence;
+    this._buildSequence(bitSequence);
   };
 
   /**
@@ -31,6 +38,7 @@
   AbstractEncoding.prototype.draw = function(canvas, startX) {
     this._drawWave(canvas, startX);
     this._drawBitBorders(canvas, startX);
+    this._drawDataValues(canvas, startX);
   };
 
   AbstractEncoding.prototype._drawBitBorders = function(canvas, startX) {
@@ -38,13 +46,13 @@
     var bleedOver = 7;
     var dashSize = 3;
     var startY = this._startY - this._bitHeight / 2 - bleedOver;
-    var endY   = this._startY + this._bitHeight / 2 + bleedOver;
+    var endY = this._startY + this._bitHeight / 2 + bleedOver;
     var x = startX;
     var y = startY;
 
     var c = canvas.getContext('2d');
     c.beginPath();
-    x += canvas.width + 2 * this._bitWidth;
+    x += canvas.width + 80;
     c.moveTo(x, y);
     for (var i = 0; i < this._bitBorders.length; i++) {
       x = x + this._bitBorders[i];
@@ -67,7 +75,19 @@
 
     c.strokeStyle = 'red';
     c.stroke();
-  }
+  };
+
+  AbstractEncoding.prototype._drawDataValues = function(canvas, startX) {
+    var c = canvas.getContext('2d');
+    c.beginPath();
+    c.font = '14px serif';
+    var x = startX + canvas.width + 80;
+    var y = this._startY - this._bitHeight / 2 - 10;
+    for (var i = 0; i < this._bitSequence.length; i++) {
+      x = x + ((this._bitBorders[i] + this._bitBorders[i+1]) / 2);
+      c.fillText(this._bitSequence[i], x, y);
+    }
+  };
 
   AbstractEncoding.prototype._drawWave = function(canvas, startX) {
     //move cursor to start of waveform
@@ -78,7 +98,7 @@
     c.moveTo(x, y);
 
     //draw line of neutral power level across canvas view, plus a little padding
-    x += canvas.width + 2 * this._bitWidth;
+    x += canvas.width + 80;
     c.lineTo(x, y);
 
     //draw encoding waveform
@@ -90,7 +110,7 @@
     }
 
     //move line to neutral power level
-    y = this._startY
+    y = this._startY;
     c.lineTo(x, y);
     this._isFinished = (x < 0);
 
@@ -102,15 +122,15 @@
 
     c.strokeStyle = 'black';
     c.stroke();
-  }
+  };
 
   AbstractEncoding.prototype.getName = function() {
     throw "getName has not been overridden by child object";
-  }
+  };
 
   AbstractEncoding.prototype.isFinished = function() {
     return this._isFinished;
-  }
+  };
 
   /**
    * Sets how tall, in pixels, to draw each individual bit.  This is the full height from negative voltage up to
@@ -118,24 +138,24 @@
    * @param {int} bitHeight
    */
   AbstractEncoding.prototype.setBitHeight = function (bitHeight) {
-    this._bitHeight = bitHeight;
-  }
+    this._bitHeight = parseInt(bitHeight);
+  };
 
   /**
    * Sets how wide, in pixels, to draw each individual bit
    * @param {int} bitWidth
    */
   AbstractEncoding.prototype.setBitWidth = function (bitWidth) {
-    this._bitWidth = bitWidth;
-  }
+    this._bitWidth = parseInt(bitWidth);
+  };
 
   /**
    * Sets the y position, in pixels, representing 0 voltage
    * @param {int} startY
    */
   AbstractEncoding.prototype.setStartY = function (startY) {
-    this._startY = startY;
-  }
+    this._startY = parseInt(startY);
+  };
 
   mogman1.encodings = mogman1.encodings || {};
   mogman1.encodings.models = mogman1.encodings.models || {};

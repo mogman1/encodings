@@ -18,7 +18,7 @@
    * in bitSequence.
    * @param {string[]} bitSequence - Array of 1's and 0's that represent a waveform
    */
-  Manchester.prototype.buildSequence = function(bitSequence) {
+  Manchester.prototype._buildSequence = function(bitSequence) {
     this._waveCoords = [];
     this._bitBorders = [0];
     var pos = null;
@@ -35,7 +35,6 @@
 
     for (var i = 0; i < bitSequence.length; i++) {
       var cur = bitSequence[i];
-      var xDistance = 0
       if (cur == '1' && pos == 'low') {
         this._waveCoords.push([0, -1 * this._bitHeight]);
         pos = 'high';
@@ -44,8 +43,7 @@
         pos = 'low';
       }
 
-      this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
-      xDistance += this._bitWidth / this._widthDivisor;
+      this._waveCoords.push([this._bitWidth, 0]);
       if (cur == '1') {
         this._waveCoords.push([0, 1 * this._bitHeight]);
         pos = 'low';
@@ -54,15 +52,14 @@
         pos = 'high';
       }
 
-      this._waveCoords.push([this._bitWidth / this._widthDivisor, 0]);
-      xDistance += this._bitWidth / this._widthDivisor;
-      this._bitBorders.push(xDistance);
+      this._waveCoords.push([this._bitWidth, 0]);
+      this._bitBorders.push(this._bitWidth * 2);
     }
   };
 
   Manchester.prototype.getName = function() {
     return "Manchester";
-  }
+  };
 
   mogman1.encodings.models.Manchester = Manchester;
 }(window.mogman1 = window.mogman1 || {}));

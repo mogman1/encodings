@@ -19,7 +19,7 @@
    * in bitSequence.
    * @param {string[]} bitSequence - Array of 1's and 0's that represent a waveform
    */
-  NRZI.prototype.buildSequence = function(bitSequence) {
+  NRZI.prototype._buildSequence = function(bitSequence) {
     this._waveCoords = [];
     this._bitBorders = [0];
     var pos = null;
@@ -58,7 +58,7 @@
 
   NRZI.prototype.getName = function() {
     return "NRZI (" + this._startPosition + ")";
-  }
+  };
 
   mogman1.encodings.models.NRZI = NRZI;
 }(window.mogman1 = window.mogman1 || {}));

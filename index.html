@@ -5,6 +5,12 @@
     <script type="text/javascript" src="mogman1/encodings/models/NRZ.js"></script>
     <script type="text/javascript" src="mogman1/encodings/models/NRZI.js"></script>
     <script type="text/javascript" src="mogman1/encodings/models/Manchester.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <style type="text/css">
+      i {
+        color: red; cursor: pointer;
+      }
+    </style>
   </head>
   <body>
     <div id="encodingDiv" style="width: 500px;"></div>
@@ -25,6 +31,11 @@
         <option value="high">High</option>
         <option value="low">Low</option>
       </select>
+      <select id="bitWidth" style="display: none;">
+        <option value="">Bit Width</option>
+        <option value="40">Normal</option>
+        <option value="20">Half</option>
+      </select>
       <button id="addEncoding" onclick="addEncoding();">Add Encoding</button>
 
       <br />
@@ -34,26 +45,30 @@
     </div>
     <div id="errors" style="color: red;"></div>
     <script type="text/javascript">
-      clock = new mogman1.encodings.models.EncodingView(document.getElementById('encodingDiv'), 300);
+      clock = new mogman1.encodings.models.EncodingView(document.getElementById('encodingDiv'), 500);
       updateSpeed();
       updateSequence();
-      clock.addEncoding('Manchester', '');
+      clock.addEncoding('Manchester', '', '40');
+      clock.addEncoding('Manchester', '', '20');
       clock.addEncoding('NRZ', '');
       clock.addEncoding('NRZI', 'high');
 
       function addEncoding() {
         var type = document.getElementById('encodingType').value;
         var startPosition = document.getElementById('startPosition').value;
+        var bitWidth = document.getElementById('bitWidth').value;
         if (type) {
           try {
-            clock.addEncoding(type, startPosition);
+            clock.addEncoding(type, startPosition, bitWidth);
             document.getElementById('encodingType').value = '';
             document.getElementById('startPosition').value = '';
             document.getElementById('startPosition').style.display = 'none';
+            document.getElementById('bitWidth').value = '';
+            document.getElementById('bitWidth').style.display = 'none';
           } catch (e) {
             console.log(e);
             document.getElementById('errors').innerHTML = e;
-            setTimeout(function() { document.getElementById('errors').innerHTML = ''; }, 5000)
+            setTimeout(function() { document.getElementById('errors').innerHTML = ''; }, 5000);
           }
         }
       }
@@ -66,11 +81,19 @@
         clock.setSpeed(document.getElementById('speed').value);
       }
 
+      function removeEncoding(encodingId) {
+        clock.removeEncoding(encodingId);
+      }
+
       function showSequenceOptions() {
-        if (document.getElementById('encodingType').value == 'NRZI') {
-          document.getElementById('startPosition').style.display = '';
-        } else {
-          document.getElementById('startPosition').style.display = 'none';
+        document.getElementById('startPosition').style.display = 'none';
+        document.getElementById('bitWidth').style.display = 'none';
+        var type = document.getElementById('encodingType').value;
+        switch (type) {
+          case 'NRZI':
+            document.getElementById('startPosition').style.display = ''; break;
+          case 'Manchester':
+            document.getElementById('bitWidth').style.display = ''; break;
         }
       }
     </script>

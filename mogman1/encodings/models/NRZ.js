@@ -17,7 +17,7 @@
    * in bitSequence.
    * @param {string[]} bitSequence - Array of 1's and 0's that represent a waveform
    */
-  NRZ.prototype.buildSequence = function(bitSequence) {
+  NRZ.prototype._buildSequence = function(bitSequence) {
     this._waveCoords = [];
     this._bitBorders = [0];
     var prev = null;
@@ -51,7 +51,7 @@
 
   NRZ.prototype.getName = function() {
     return "NRZ";
-  }
+  };
 
   mogman1.encodings.models.NRZ = NRZ;
 }(window.mogman1 = window.mogman1 || {}));
